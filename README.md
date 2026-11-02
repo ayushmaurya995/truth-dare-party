@@ -1,38 +1,34 @@
 # Truth & Dare Party 🎉
 
-A playful, responsive Truth & Dare party game for friends. Supports same-device local play and online multiplayer rooms.
+A playful, mobile-first party game for friends. The first browser-playable prototype supports same-device local play.
 
-## Design direction
+## Current features
 
-Inspired by playful mobile game interfaces: warm off-white backgrounds, yellow, mint, pink and sky-blue accents, rounded cards, bold typography, cute mascot-style illustrations and smooth interactions.
+- Add and remove 2–12 players.
+- Rotate turns and randomly select a player.
+- Pick Truth or Dare prompts.
+- Skip or complete a prompt to advance to the next player.
+- Responsive layout for mobile and desktop.
+- No account or backend required for local play.
 
-## Planned stack
+## Visual direction
 
-- React + Vite + TypeScript
-- Tailwind CSS
-- Motion / Framer Motion
-- Supabase Realtime and PostgreSQL for online rooms
-- Vercel deployment
+Warm off-white canvas, sunny yellow, mint and pink cards, rounded pill controls, expressive emoji mascots and friendly Nunito typography, inspired by the supplied mobile game UI reference.
 
-## Gameplay
+## Run locally
 
-- Add 2–12 players for local play.
-- Rotate turns and choose Truth or Dare.
-- Random prompts, skip, complete and score controls.
-- Create/join online rooms with a shareable room code.
-- Responsive layouts for phones, tablets and desktops.
+This initial prototype is a static web app. Open `index.html` directly in a browser, or serve the project with any static file server.
 
-## Local development
+## Online multiplayer
 
-```bash
-npm install
-npm run dev
-```
+Online room creation/joining is not wired up yet. It will require a Supabase project, database tables and Realtime subscriptions. The current Join control is intentionally a setup notice, not a working multiplayer flow.
 
-## Environment variables
+## Deployment
 
-Create `.env.local` from `.env.example` and configure the Supabase project URL and anon/publishable key when enabling online multiplayer.
+The static prototype can be deployed on Vercel with the project root as the root directory and no build command; use `index.html` as the entry point.
 
-## Status
+## Roadmap
 
-Initial repository setup. Online multiplayer requires Supabase configuration and testing before production use.
+1. Improve local gameplay, prompt packs and custom prompts.
+2. Add Supabase-powered real-time rooms and synchronized turns.
+3. Add PWA install support and polish accessibility/testing.
