@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f5eb" />
+  <title>Truth or Dare — Party Time!</title>
+  <meta name="description" content="A playful Truth & Dare party game for friends. Play together or invite friends online." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900;1000&display=swap" rel="stylesheet">
+  <style>
+    :root{font-family:Nunito,ui-rounded,system-ui,sans-serif;color:#29271f;background:#f8f5eb;font-synthesis:none;text-rendering:optimizeLegibility}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 8%,#fff5c8 0,transparent 27%),radial-gradient(circle at 92% 32%,#fce2ec 0,transparent 24%),#f8f5eb}
+    button,input{font:inherit}button{border:0;cursor:pointer;font-weight:900;transition:transform .18s,box-shadow .18s}button:hover{transform:translateY(-2px)}button:active{transform:scale(.98)}
+    .wrap{max-width:1120px;margin:auto;padding:24px 22px 56px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:1000;letter-spacing:-.5px}.logo{width:43px;height:43px;border-radius:15px;background:#ffda58;display:grid;place-items:center;font-size:24px;box-shadow:0 5px 0 #e9bd3c}.pill{background:white;border:1px solid #eee8d8;padding:9px 14px;border-radius:99px;font-size:12px;font-weight:900}
+    .hero{text-align:center;padding:38px 0 26px}.eyebrow{display:inline-flex;gap:7px;align-items:center;background:white;padding:8px 14px;border-radius:99px;font-size:12px;font-weight:1000;color:#686253;box-shadow:0 3px 0 #eee8d8}.hero h1{font-size:clamp(39px,7vw,68px);line-height:.98;letter-spacing:-3px;margin:19px 0 13px;font-weight:1000}.hero h1 span{color:#ee7da9}.hero p{color:#777163;margin:0;font-size:16px;font-weight:700}.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:stretch}.panel{border:1px solid #eee8d9;border-radius:28px;background:#fffefa;padding:24px;box-shadow:0 9px 0 #e9e4d8}.panel h2{font-size:22px;margin:0 0 5px;letter-spacing:-.7px}.sub{color:#898373;font-size:13px;font-weight:700;margin:0 0 20px}.players{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0}.player{display:flex;align-items:center;gap:7px;background:#f6f2e7;border-radius:99px;padding:8px 12px;font-weight:900;font-size:13px}.avatar{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#bfe3c2}.remove{background:transparent;color:#a29a88;padding:0 2px;font-size:16px}.addrow{display:flex;gap:9px}.addrow input,.roomrow input{min-width:0;flex:1;border:1.5px solid #ece6d8;background:#fff;border-radius:15px;padding:13px 15px;outline:none;font-weight:800}.addrow input:focus,.roomrow input:focus{border-color:#7fc28b}.small{border-radius:15px;padding:0 17px;background:#bce1bf;color:#26372a}.primary{background:#25241e;color:white;border-radius:17px;padding:15px 20px;width:100%;box-shadow:0 5px 0 #11110e;margin-top:15px}.primary:disabled{opacity:.4;cursor:not-allowed;transform:none}.modes{display:grid;grid-template-columns:1fr 1fr;gap:13px}.mode{border-radius:23px;padding:17px;text-align:left;min-height:193px;position:relative;overflow:hidden}.mode.truth{background:#ffdf67}.mode.dare{background:#f5a0c2}.mode .tag{font-size:11px;font-weight:1000;background:#fff9;border-radius:99px;padding:6px 10px;display:inline-block}.mode h3{font-size:28px;letter-spacing:-1px;margin:13px 0 5px}.mode p{font-size:12px;font-weight:800;max-width:125px;margin:0}.mascot{font-size:69px;position:absolute;right:8px;bottom:3px;filter:drop-shadow(0 5px 0 #00000012);transform:rotate(-8deg)}.game{margin-top:18px;border-radius:23px;background:#e5f2df;padding:18px;text-align:center}.game .turn{font-size:12px;font-weight:1000;color:#58715a}.game h3{font-size:23px;margin:8px 0 12px}.spin{background:#fff;border-radius:99px;padding:11px 18px;color:#30332a}.room{margin-top:16px;padding-top:16px;border-top:1px dashed #e5dfd2}.roomrow{display:flex;gap:8px}.outline{background:white;border:1.5px solid #e9e3d6;border-radius:14px;padding:11px 15px}.muted{font-size:11px;color:#8c8577;font-weight:700;margin:9px 0 0}.overlay{position:fixed;inset:0;background:#24231dcc;display:none;place-items:center;padding:20px;z-index:5}.overlay.show{display:grid}.modal{width:min(510px,100%);background:#fffdf5;border-radius:30px;padding:28px;box-shadow:0 10px 0 #111}.modaltop{display:flex;justify-content:space-between;align-items:center}.close{background:#f1ebde;border-radius:50%;width:35px;height:35px}.prompt{border-radius:23px;padding:28px 22px;margin:18px 0;text-align:center;background:#ffdf67}.prompt.dare{background:#f5a0c2}.prompt .kind{font-size:11px;font-weight:1000;letter-spacing:1.5px}.prompt .question{font-size:clamp(23px,5vw,32px);font-weight:1000;line-height:1.14;margin:16px 0}.actions{display:flex;gap:9px}.actions button{flex:1;padding:13px;border-radius:15px}.done{background:#bde2c0}.skip{background:#f0ecdf}.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;transition:.25s;background:#29271f;color:white;padding:12px 18px;border-radius:99px;font-weight:900;font-size:13px;z-index:8}.toast.show{opacity:1;transform:translate(-50%,0)}.footer{text-align:center;color:#9b9383;font-size:12px;font-weight:800;margin-top:24px}
+    @media(max-width:760px){.wrap{padding:17px 14px 40px}.hero{padding:30px 0 23px}.hero h1{letter-spacing:-2px}.layout{grid-template-columns:1fr}.panel{padding:20px}.top .pill{font-size:10px}.mode{min-height:175px}.brand{font-size:17px}}
+    @media(max-width:370px){.modes{gap:9px}.mode{padding:13px}.mascot{font-size:56px}.mode h3{font-size:24px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top"><div class="brand"><div class="logo">🎉</div> truth or dare</div><div class="pill">✦ FRIENDS • FUN • NO BORING MOMENTS</div></header>
+    <section class="hero"><div class="eyebrow">🎈 YOUR FRIEND GROUP'S NEW FAVOURITE GAME</div><h1>Ready for some<br><span>chaotic fun?</span></h1><p>Gather your people. Pick your fate. Make some memories.</p></section>
+    <section class="layout">
+      <div class="panel">
+        <h2>Who's playing today? 👀</h2><p class="sub">Add at least two friends to get the party started.</p>
+        <div id="players" class="players"></div>
+        <div class="addrow"><input id="playerName" maxlength="18" placeholder="Your friend's name..." aria-label="Player name"><button class="small" id="addPlayer">+ Add</button></div>
+        <button class="primary" id="start" disabled>LET'S PLAY →</button>
+        <div class="room"><h2 style="font-size:17px">Playing from different places? 🌍</h2><p class="sub" style="margin:4px 0 12px">Online rooms are coming next. Share a room code when multiplayer is configured.</p><div class="roomrow"><input id="roomCode" placeholder="Enter room code" maxlength="8"><button class="outline" id="join">Join</button></div><p class="muted">Local party mode works right now on this device.</p></div>
+      </div>
+      <div class="panel">
+        <h2>Pick your kind of trouble ✨</h2><p class="sub">No pressure. Just good vibes and funny moments.</p>
+        <div class="modes">
+          <button class="mode truth" id="truth"><span class="tag">💛 BE HONEST</span><h3>TRUTH</h3><p>Secrets, stories & awkward questions.</p><span class="mascot">🌟</span></button>
+          <button class="mode dare" id="dare"><span class="tag">💗 BE BOLD</span><h3>DARE</h3><p>Funny challenges & silly moments.</p><span class="mascot">🎀</span></button>
+        </div>
+        <div class="game"><div class="turn" id="turn">YOUR PARTY STARTS HERE</div><h3 id="current">Who's taking the first turn?</h3><button class="spin" id="random">🎲 Pick a random player</button></div>
+      </div>
+    </section>
+    <div class="footer">Made for giggles, not grudges. Everyone can skip any prompt. 💛</div>
+  </main>
+  <div class="overlay" id="overlay"><div class="modal"><div class="modaltop"><b id="modalTitle">Your turn!</b><button class="close" id="close" aria-label="Close">×</button></div><div class="prompt" id="prompt"><div class="kind" id="kind">TRUTH TIME</div><div class="question" id="question">Question goes here</div><div id="forPlayer" style="font-size:12px;font-weight:1000">FOR PLAYER</div></div><div class="actions"><button class="skip" id="skip">Skip ↻</button><button class="done" id="complete">Done ✓</button></div></div></div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const truths=[
+      "What's the most embarrassing thing you've done in public?",
+      "Who was your first crush?",
+      "What's a secret talent almost nobody knows about?",
+      "What's the biggest lie you've told to escape plans?",
+      "What's one thing you'd change about your first impression?",
+      "What's the funniest message you've accidentally sent to the wrong person?",
+      "Who in this group would survive longest on a deserted island?",
+      "What's a song you secretly love but pretend not to?",
+      "What's the silliest thing you're afraid of?",
+      "What's your most awkward school or college memory?",
+      "Have you ever had a crush on someone in this room?",
+      "What's the weirdest thing in your search history?"
+    ];
+    const dares=[
+      "Do your best celebrity impression for 30 seconds.",
+      "Sing the chorus of your favourite song dramatically.",
+      "Talk in a robot voice until your next turn.",
+      "Do a silly dance for 20 seconds.",
+      "Try to make everyone laugh in 30 seconds.",
+      "Speak using only questions for the next round.",
+      "Act like a news reporter describing this room.",
+      "Do your best runway walk across the room.",
+      "Name five things in this room in 10 seconds.",
+      "Make up a tiny rap about the person to your left.",
+      "Balance an object on your head for 15 seconds.",
+      "Tell a joke with a completely straight face."
+    ];
+    let players=[],turn=0,currentIndex=0,lastTruth=-1,lastDare=-1;
+    const $=id=>document.getElementById(id);
+    function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2300)}
+    function render(){ $('players').innerHTML='';players.forEach((p,i)=>{const el=document.createElement('span');el.className='player';el.innerHTML='<span class="avatar">'+['🌼','🍀','🫧','🍓','🌈','⭐','🐣','🍉','🦋','🐼','🌻','🍒'][i%12]+'</span><span></span><button class="remove" aria-label="Remove '+p+'">×</button>';el.children[1].textContent=p;el.querySelector('button').onclick=()=>{players.splice(i,1);turn=players.length?turn%players.length:0;render()};$('players').append(el)});$('start').disabled=players.length<2;$('current').textContent=players.length?players[turn%players.length]+"'s turn is up!":"Who's taking the first turn?"}
+    function add(){let name=$('playerName').value.trim();if(!name)return;if(players.length>=12){toast('Maximum 12 players for now!');return}if(players.some(p=>p.toLowerCase()===name.toLowerCase())){toast('That name is already in the party!');return}players.push(name);$('playerName').value='';render()}
+    function choosePlayer(){if(players.length<2){toast('Add at least two players first!');return}currentIndex=turn%players.length;$('turn').textContent='✦ IT’S YOUR MOMENT';$('current').textContent=players[currentIndex]+"'s turn is up!"}
+    function prompt(type){if(players.length<2){toast('Add at least two players first!');return}choosePlayer();const arr=type==='truth'?truths:dares;let idx=Math.floor(Math.random()*arr.length);if(arr.length>1&&idx===(type==='truth'?lastTruth:lastDare))idx=(idx+1)%arr.length;if(type==='truth')lastTruth=idx;else lastDare=idx;$('prompt').className='prompt '+(type==='dare'?'dare':'');$('kind').textContent=type==='truth'?'💛 TRUTH TIME':'💗 DARE TIME';$('question').textContent=arr[idx];$('forPlayer').textContent='FOR '+players[currentIndex].toUpperCase();$('modalTitle').textContent=players[currentIndex]+"'s turn";$('overlay').classList.add('show')}
+    function next(){if(players.length){turn=(currentIndex+1)%players.length;render()}$('overlay').classList.remove('show')}
+    $('addPlayer').onclick=add;$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')add()});$('start').onclick=()=>{choosePlayer();toast('Party started! Choose Truth or Dare 🎉')};$('truth').onclick=()=>prompt('truth');$('dare').onclick=()=>prompt('dare');$('random').onclick=()=>{if(players.length<2){toast('Add at least two players first!');return}turn=Math.floor(Math.random()*players.length);choosePlayer()};$('close').onclick=()=>$('overlay').classList.remove('show');$('skip').onclick=()=>{toast('No worries — next friend!');next()};$('complete').onclick=()=>{toast('Legend behaviour! ✨');next()};$('overlay').onclick=e=>{if(e.target===$('overlay'))$('overlay').classList.remove('show')};$('join').onclick=()=>toast('Online rooms will be enabled after Supabase setup.');render();
+  </script>
+</body>
+</html>
