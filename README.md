@@ -1,34 +1,36 @@
 # Truth & Dare Party 🎉
 
-A playful, mobile-first party game for friends. The first browser-playable prototype supports same-device local play.
+A playful, mobile-first party game for friends. Same-device local play is implemented; Supabase online-room setup is scaffolded.
 
-## Current features
+## Current gameplay
 
-- Add and remove 2–12 players.
+- Add/remove 2–12 local players.
 - Rotate turns and randomly select a player.
-- Pick Truth or Dare prompts.
-- Skip or complete a prompt to advance to the next player.
-- Responsive layout for mobile and desktop.
-- No account or backend required for local play.
+- Truth and Dare prompt packs.
+- Skip or complete a prompt to advance.
+- Responsive mobile and desktop layout.
 
-## Visual direction
+## Supabase setup
 
-Warm off-white canvas, sunny yellow, mint and pink cards, rounded pill controls, expressive emoji mascots and friendly Nunito typography, inspired by the supplied mobile game UI reference.
+The project URL and client publishable key are in `supabase-config.js`. Publishable keys are intended for browser use; never put a Supabase secret or service-role key in frontend code.
+
+1. Open the Supabase project SQL Editor.
+2. Run the SQL in `supabase/schema.sql`.
+3. The room table is configured for Realtime.
+4. Before production, tighten room access (the starter policies allow public room reads/updates; room codes should be treated as shareable invite tokens).
+
+**Important:** The Supabase schema/configuration have been added, but the browser game's create/join/realtime controls are not yet connected. Local play continues to work without Supabase.
 
 ## Run locally
 
-This initial prototype is a static web app. Open `index.html` directly in a browser, or serve the project with any static file server.
+Open `index.html` in a browser or serve the repository root with a static file server.
 
-## Online multiplayer
+## Vercel
 
-Online room creation/joining is not wired up yet. It will require a Supabase project, database tables and Realtime subscriptions. The current Join control is intentionally a setup notice, not a working multiplayer flow.
-
-## Deployment
-
-The static prototype can be deployed on Vercel with the project root as the root directory and no build command; use `index.html` as the entry point.
+Deploy as a static site with the repository root as the root directory and no build command. The entry point is `index.html`.
 
 ## Roadmap
 
-1. Improve local gameplay, prompt packs and custom prompts.
-2. Add Supabase-powered real-time rooms and synchronized turns.
-3. Add PWA install support and polish accessibility/testing.
+1. Connect the browser UI to Supabase room creation, joining and Realtime sync.
+2. Add room host controls, synchronized turns and reconnect handling.
+3. Add installable PWA support and production security hardening.
