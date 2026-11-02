@@ -1,36 +1,45 @@
 # Truth & Dare Party 🎉
 
-A playful, mobile-first party game for friends. Same-device local play is implemented; Supabase online-room setup is scaffolded.
+A playful, mobile-first Truth & Dare game for friends. Play locally on one device or invite friends into a real-time online room.
 
-## Current gameplay
+## Current features
 
-- Add/remove 2–12 local players.
-- Rotate turns and randomly select a player.
-- Truth and Dare prompt packs.
-- Skip or complete a prompt to advance.
-- Responsive mobile and desktop layout.
+- Responsive mobile and desktop interface.
+- Same-device local party mode for 2–12 players.
+- Player rotation, random selection and Truth/Dare prompts.
+- Skip and complete actions.
+- Firebase Anonymous Authentication for online identity.
+- Cloud Firestore room documents and real-time snapshot listeners.
+- Six-character room codes for joining friends.
 
-## Supabase setup
+## Firebase setup
 
-The project URL and client publishable key are in `supabase-config.js`. Publishable keys are intended for browser use; never put a Supabase secret or service-role key in frontend code.
+See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for the complete setup and deployment guide.
 
-1. Open the Supabase project SQL Editor.
-2. Run the SQL in `supabase/schema.sql`.
-3. The room table is configured for Realtime.
-4. Before production, tighten room access (the starter policies allow public room reads/updates; room codes should be treated as shareable invite tokens).
+1. Create a Firebase project and register a Web app.
+2. Add the web app config to `firebase-config.js`.
+3. Enable Anonymous sign-in in Firebase Authentication.
+4. Create a Cloud Firestore database.
+5. Deploy the included Firestore security rules.
 
-**Important:** The Supabase schema/configuration have been added, but the browser game's create/join/realtime controls are not yet connected. Local play continues to work without Supabase.
+The online-room UI is wired to Firebase, but it will only work after these Firebase project steps are completed.
 
 ## Run locally
 
-Open `index.html` in a browser or serve the repository root with a static file server.
+Serve the repository root with a local HTTP server (for example, VS Code Live Server). Firebase features do not work from a `file://` URL.
 
-## Vercel
+## Deploy with Firebase Hosting
 
-Deploy as a static site with the repository root as the root directory and no build command. The entry point is `index.html`.
+Install the Firebase CLI, authenticate, set the project ID in `.firebaserc`, then run:
 
-## Roadmap
+```bash
+firebase deploy
+```
 
-1. Connect the browser UI to Supabase room creation, joining and Realtime sync.
-2. Add room host controls, synchronized turns and reconnect handling.
-3. Add installable PWA support and production security hardening.
+The included `firebase.json` publishes the repository root as a static site. Firebase Hosting is the chosen hosting platform; Vercel is not required.
+
+## Security notes
+
+- Firebase web app config is public client configuration; never add service-account credentials to the browser app.
+- Room documents are readable by authenticated clients that know the room code so they can join. Room listing is disabled.
+- Only room members can update a room, with a 12-player limit. Review and test rules and add room expiry/abuse controls before a public launch.
