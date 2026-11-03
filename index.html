@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f8f5eb" />
   <title>Truth or Dare — Party Time!</title>
-  <meta name="description" content="A playful Truth & Dare party game for friends. Play together or invite friends online." />
+  <meta name="description" content="A playful local Truth & Dare party game for friends. Gather around one screen and play." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900;1000&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
         <div id="players" class="players"></div>
         <div class="addrow"><input id="playerName" maxlength="18" placeholder="Your friend's name..." aria-label="Player name"><button class="small" id="addPlayer">+ Add</button></div>
         <button class="primary" id="start" disabled>LET'S PLAY →</button>
-        <div class="room"><h2 style="font-size:17px">Playing from different places? 🌍</h2><p class="sub" style="margin:4px 0 12px">Create a room or join friends using their six-character code.</p><div class="addrow" style="margin-bottom:9px"><button class="small" id="createRoom">＋ Create room</button><input id="roomCode" placeholder="ROOM CODE" maxlength="8" style="text-transform:uppercase"><button class="outline" id="join">Join</button></div><div id="roomShare" class="roomrow" style="display:none;align-items:center"><b>Room: <span id="roomCodeDisplay"></span></b><button class="outline" id="copyCode">Copy code</button><button class="outline" id="leave">Leave</button></div><p class="muted" id="roomStatus">LOCAL PARTY MODE • Online rooms need Firebase setup.</p></div>
+        <div class="room"><h2 style="font-size:17px">Playing from different places? 🌍</h2><p class="sub" style="margin:4px 0 12px">One screen, all your friends. Pass the phone around and take turns.</p><p class="muted">✨ Local party mode • No sign-up • No internet required</p></div>
       </div>
       <div class="panel">
         <h2>Pick your kind of trouble ✨</h2><p class="sub">No pressure. Just good vibes and funny moments.</p>
@@ -44,29 +44,100 @@
   </main>
   <div class="overlay" id="overlay"><div class="modal"><div class="modaltop"><b id="modalTitle">Your turn!</b><button class="close" id="close" aria-label="Close">×</button></div><div class="prompt" id="prompt"><div class="kind" id="kind">TRUTH TIME</div><div class="question" id="question">Question goes here</div><div id="forPlayer" style="font-size:12px;font-weight:1000">FOR PLAYER</div></div><div class="actions"><button class="skip" id="skip">Skip ↻</button><button class="done" id="complete">Done ✓</button></div></div></div>
   <div class="toast" id="toast"></div>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-  <script src="./firebase-config.js"></script>
   <script>
-    const truths=["What's the most embarrassing thing you've done in public?","Who was your first crush?","What's a secret talent almost nobody knows about?","What's the biggest lie you've told to escape plans?","What's one thing you'd change about your first impression?","What's the funniest message you've accidentally sent to the wrong person?","Who in this group would survive longest on a deserted island?","What's a song you secretly love but pretend not to?","What's the silliest thing you're afraid of?","What's your most awkward school or college memory?","Have you ever had a crush on someone in this room?","What's the weirdest thing in your search history?"];
-    const dares=["Do your best celebrity impression for 30 seconds.","Sing the chorus of your favourite song dramatically.","Talk in a robot voice until your next turn.","Do a silly dance for 20 seconds.","Try to make everyone laugh in 30 seconds.","Speak using only questions for the next round.","Act like a news reporter describing this room.","Do your best runway walk across the room.","Name five things in this room in 10 seconds.","Make up a tiny rap about the person to your left.","Balance an object on your head for 15 seconds.","Tell a joke with a completely straight face."];
-    let players=[],turn=0,currentIndex=0,lastTruth=-1,lastDare=-1,db=null,auth=null,roomRef=null,roomUnsubscribe=null,roomCode=null,uid=null,online=false;
+    const truths=[
+      "What's the most embarrassing thing you've done in public?",
+      "Who was your first crush?",
+      "What's a secret talent almost nobody knows about?",
+      "What's the biggest lie you've told to escape plans?",
+      "What's one thing you'd change about your first impression?",
+      "What's the funniest message you've accidentally sent to the wrong person?",
+      "Who in this group would survive longest on a deserted island?",
+      "What's a song you secretly love but pretend not to?",
+      "What's the silliest thing you're afraid of?",
+      "What's your most awkward school or college memory?",
+      "Have you ever had a crush on someone in this room?",
+      "What's the weirdest thing in your search history?"
+    ];
+    const dares=[
+      "Do your best celebrity impression for 30 seconds.",
+      "Sing the chorus of your favourite song dramatically.",
+      "Talk in a robot voice until your next turn.",
+      "Do a silly dance for 20 seconds.",
+      "Try to make everyone laugh in 30 seconds.",
+      "Speak using only questions for the next round.",
+      "Act like a news reporter describing this room.",
+      "Do your best runway walk across the room.",
+      "Name five things in this room in 10 seconds.",
+      "Make up a tiny rap about the person to your left.",
+      "Balance an object on your head for 15 seconds.",
+      "Tell a joke with a completely straight face."
+    ];
+    let players=[],turn=0,currentIndex=0,lastTruth=-1,lastDare=-1;
     const $=id=>document.getElementById(id);
-    function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2600)}
-    function safeCode(){return Math.random().toString(36).slice(2,8).toUpperCase()}
-    function render(){ $('players').innerHTML='';players.forEach((p,i)=>{const el=document.createElement('span');el.className='player';el.innerHTML='<span class="avatar">'+['🌼','🍀','🫧','🍓','🌈','⭐','🐣','🍉','🦋','🐼','🌻','🍒'][i%12]+'</span><span></span>'+(online?'':'<button class="remove" aria-label="Remove player">×</button>');el.children[1].textContent=p.name||p;if(!online)el.querySelector('button').onclick=()=>{players.splice(i,1);turn=players.length?turn%players.length:0;render()};$('players').append(el)});$('start').disabled=players.length<2;$('current').textContent=players.length?(players[turn%players.length].name||players[turn%players.length])+"'s turn is up!":"Who's taking the first turn?";$('roomStatus').textContent=online?'ONLINE ROOM • '+roomCode:'LOCAL PARTY MODE';$('createRoom').disabled=online;$('join').disabled=online}
-    function add(){let name=$('playerName').value.trim();if(!name)return;if(online){joinRoom(roomCode,name);return}if(players.length>=12){toast('Maximum 12 players for now!');return}if(players.some(p=>(p.name||p).toLowerCase()===name.toLowerCase())){toast('That name is already in the party!');return}players.push({name,uid:'local-'+players.length});$('playerName').value='';render()}
-    function choosePlayer(){if(players.length<2){toast('Add at least two players first!');return}currentIndex=turn%players.length;$('turn').textContent='✦ IT’S YOUR MOMENT';$('current').textContent=(players[currentIndex].name||players[currentIndex])+"'s turn is up!"}
-    async function ensureFirebase(){if(!window.firebaseConfig||!window.firebaseConfig.apiKey||window.firebaseConfig.apiKey.includes('YOUR_'))throw new Error('Add your Firebase web app settings to firebase-config.js first.');if(!firebase.apps.length)firebase.initializeApp(window.firebaseConfig);auth=firebase.auth();db=firebase.firestore();if(!auth.currentUser)await auth.signInAnonymously();uid=auth.currentUser.uid}
-    async function createRoom(){try{await ensureFirebase();const name=$('playerName').value.trim();if(!name){toast('Enter your name first, then create a room.');return}const code=safeCode();const player={uid,name};roomRef=db.collection('rooms').doc(code);await roomRef.set({code,hostUid:uid,memberIds:[uid],players:[player],turnIndex:0,activePrompt:null,createdAt:firebase.firestore.FieldValue.serverTimestamp()});$('playerName').value='';online=true;roomCode=code;listenRoom();toast('Room created! Share code '+code)}catch(e){console.error(e);toast(e.message||'Could not create room.')}}
-    async function joinRoom(code,name){try{await ensureFirebase();if(!code||!name){toast('Enter a room code and your name.');return}const ref=db.collection('rooms').doc(code.toUpperCase());await db.runTransaction(async tx=>{const snap=await tx.get(ref);if(!snap.exists)throw new Error('Room not found. Check the code.');const data=snap.data();if(data.memberIds.includes(uid))return;if(data.players.length>=12)throw new Error('This room is full (12 players max).');tx.update(ref,{memberIds:firebase.firestore.FieldValue.arrayUnion(uid),players:firebase.firestore.FieldValue.arrayUnion({uid,name})})});roomRef=ref;roomCode=code.toUpperCase();online=true;$('playerName').value='';listenRoom();toast('Joined room '+roomCode)}catch(e){console.error(e);toast(e.message||'Could not join room.')}}
-    function listenRoom(){if(roomUnsubscribe)roomUnsubscribe();roomUnsubscribe=roomRef.onSnapshot(snap=>{if(!snap.exists){toast('This room is no longer available.');leaveRoom();return}const data=snap.data();players=data.players||[];turn=data.turnIndex||0;const active=data.activePrompt;if(active){currentIndex=players.findIndex(p=>p.uid===active.playerUid);if(currentIndex<0)currentIndex=data.turnIndex||0;$('turn').textContent='✦ '+active.type.toUpperCase()+' • '+active.playerName;$('current').textContent=active.playerName+"'s turn";$('kind').textContent=active.type==='truth'?'💛 TRUTH TIME':'💗 DARE TIME';$('question').textContent=active.text;$('forPlayer').textContent='FOR '+active.playerName.toUpperCase();$('prompt').className='prompt '+(active.type==='dare'?'dare':'');$('modalTitle').textContent=active.playerName+"'s turn";$('overlay').classList.add('show')}else $('overlay').classList.remove('show');render();$('roomCodeDisplay').textContent=roomCode;$('roomShare').style.display='flex'},e=>{console.error(e);toast('Room connection lost. Check your internet.')})}
-    async function publishPrompt(type){if(!players.length)return;const idx=Math.floor(Math.random()*players.length);currentIndex=idx;const arr=type==='truth'?truths:dares;let n=Math.floor(Math.random()*arr.length);if(arr.length>1&&n===(type==='truth'?lastTruth:lastDare))n=(n+1)%arr.length;if(type==='truth')lastTruth=n;else lastDare=n;const p=players[idx];const active={type,text:arr[n],playerName:p.name||p,playerUid:p.uid};if(online){try{await roomRef.update({activePrompt:active,turnIndex:idx})}catch(e){toast('Could not update room.')}}else showPrompt(active)}
-    function showPrompt(active){$('prompt').className='prompt '+(active.type==='dare'?'dare':'');$('kind').textContent=active.type==='truth'?'💛 TRUTH TIME':'💗 DARE TIME';$('question').textContent=active.text;$('forPlayer').textContent='FOR '+active.playerName.toUpperCase();$('modalTitle').textContent=active.playerName+"'s turn";$('overlay').classList.add('show')}
-    async function next(){if(online){try{await roomRef.update({activePrompt:null,turnIndex:(currentIndex+1)%players.length})}catch(e){toast('Could not update turn.')}}else{turn=(currentIndex+1)%players.length;render();$('overlay').classList.remove('show')}}
-    async function leaveRoom(){if(roomUnsubscribe)roomUnsubscribe();roomUnsubscribe=null;online=false;roomRef=null;roomCode=null;players=[];turn=0;$('roomShare').style.display='none';$('overlay').classList.remove('show');render()}
-    $('addPlayer').onclick=add;$('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')add()});$('start').onclick=()=>{if(players.length<2){toast('Add at least two players first!');return}choosePlayer();toast('Party started! Choose Truth or Dare 🎉')};$('truth').onclick=()=>publishPrompt('truth');$('dare').onclick=()=>publishPrompt('dare');$('random').onclick=()=>{if(players.length<2){toast('Add at least two players first!');return}if(online){currentIndex=Math.floor(Math.random()*players.length);roomRef.update({turnIndex:currentIndex,activePrompt:null})}else{turn=Math.floor(Math.random()*players.length);choosePlayer()}};$('close').onclick=()=>$('overlay').classList.remove('show');$('skip').onclick=()=>{toast('No worries — next friend!');next()};$('complete').onclick=()=>{toast('Legend behaviour! ✨');next()};$('overlay').onclick=e=>{if(e.target===$('overlay'))$('overlay').classList.remove('show')};$('createRoom').onclick=createRoom;$('join').onclick=()=>joinRoom($('roomCode').value.trim(),$('playerName').value.trim());$('leave').onclick=leaveRoom;$('copyCode').onclick=async()=>{try{await navigator.clipboard.writeText(roomCode);toast('Room code copied!')}catch(e){toast('Room code: '+roomCode)}};render();
+    function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2300)}
+    function render(){
+      $('players').innerHTML='';
+      players.forEach((p,i)=>{
+        const el=document.createElement('span');
+        el.className='player';
+        el.innerHTML='<span class="avatar">'+['🌼','🍀','🫧','🍓','🌈','⭐','🐣','🍉','🦋','🐼','🌻','🍒'][i%12]+'</span><span></span><button class="remove" aria-label="Remove player">×</button>';
+        el.children[1].textContent=p;
+        el.querySelector('button').onclick=()=>{players.splice(i,1);turn=players.length?turn%players.length:0;render()};
+        $('players').append(el);
+      });
+      $('start').disabled=players.length<2;
+      $('current').textContent=players.length?players[turn%players.length]+"'s turn is up!":"Who's taking the first turn?";
+    }
+    function add(){
+      const name=$('playerName').value.trim();
+      if(!name)return;
+      if(players.length>=12){toast('Maximum 12 players for now!');return}
+      if(players.some(p=>p.toLowerCase()===name.toLowerCase())){toast('That name is already in the party!');return}
+      players.push(name);
+      $('playerName').value='';
+      render();
+    }
+    function choosePlayer(){
+      if(players.length<2){toast('Add at least two players first!');return}
+      currentIndex=turn%players.length;
+      $('turn').textContent='✦ IT’S YOUR MOMENT';
+      $('current').textContent=players[currentIndex]+"'s turn is up!";
+    }
+    function prompt(type){
+      if(players.length<2){toast('Add at least two players first!');return}
+      choosePlayer();
+      const arr=type==='truth'?truths:dares;
+      let idx=Math.floor(Math.random()*arr.length);
+      const last=type==='truth'?lastTruth:lastDare;
+      if(arr.length>1&&idx===last)idx=(idx+1)%arr.length;
+      if(type==='truth')lastTruth=idx;else lastDare=idx;
+      $('prompt').className='prompt '+(type==='dare'?'dare':'');
+      $('kind').textContent=type==='truth'?'💛 TRUTH TIME':'💗 DARE TIME';
+      $('question').textContent=arr[idx];
+      $('forPlayer').textContent='FOR '+players[currentIndex].toUpperCase();
+      $('modalTitle').textContent=players[currentIndex]+"'s turn";
+      $('overlay').classList.add('show');
+    }
+    function next(){
+      if(players.length){turn=(currentIndex+1)%players.length;render()}
+      $('overlay').classList.remove('show');
+    }
+    $('addPlayer').onclick=add;
+    $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')add()});
+    $('start').onclick=()=>{choosePlayer();toast('Party started! Choose Truth or Dare 🎉')};
+    $('truth').onclick=()=>prompt('truth');
+    $('dare').onclick=()=>prompt('dare');
+    $('random').onclick=()=>{
+      if(players.length<2){toast('Add at least two players first!');return}
+      turn=Math.floor(Math.random()*players.length);
+      choosePlayer();
+    };
+    $('close').onclick=()=>$('overlay').classList.remove('show');
+    $('skip').onclick=()=>{toast('No worries — next friend!');next()};
+    $('complete').onclick=()=>{toast('Legend behaviour! ✨');next()};
+    $('overlay').onclick=e=>{if(e.target===$('overlay'))$('overlay').classList.remove('show')};
+    render();
   </script>
 </body>
 </html>
