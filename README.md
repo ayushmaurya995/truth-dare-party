@@ -1,45 +1,36 @@
 # Truth & Dare Party 🎉
 
-A playful, mobile-first Truth & Dare game for friends. Play locally on one device or invite friends into a real-time online room.
+A playful, mobile-friendly Truth & Dare game for friends. Gather around one phone, tablet or laptop and take turns together.
 
-## Current features
+## Features
 
-- Responsive mobile and desktop interface.
-- Same-device local party mode for 2–12 players.
-- Player rotation, random selection and Truth/Dare prompts.
-- Skip and complete actions.
-- Firebase Anonymous Authentication for online identity.
-- Cloud Firestore room documents and real-time snapshot listeners.
-- Six-character room codes for joining friends.
+- Add and remove 2–12 players.
+- Random player selection.
+- Truth and Dare prompt packs.
+- Skip or complete a challenge to pass the turn.
+- Responsive layout for mobile, tablet and desktop.
+- No login, backend, database or internet connection required for gameplay.
 
-## Firebase setup
+## Tech
 
-See [FIREBASE_SETUP.md](./FIREBASE_SETUP.md) for the complete setup and deployment guide.
-
-1. Create a Firebase project and register a Web app.
-2. Add the web app config to `firebase-config.js`.
-3. Enable Anonymous sign-in in Firebase Authentication.
-4. Create a Cloud Firestore database.
-5. Deploy the included Firestore security rules.
-
-The online-room UI is wired to Firebase, but it will only work after these Firebase project steps are completed.
+- HTML
+- CSS
+- Vanilla JavaScript
 
 ## Run locally
 
-Serve the repository root with a local HTTP server (for example, VS Code Live Server). Firebase features do not work from a `file://` URL.
+Open `index.html` directly in a modern browser, or serve the repository root with a static file server.
 
-## Deploy with Firebase Hosting
+## Deploy
 
-Install the Firebase CLI, authenticate, set the project ID in `.firebaserc`, then run:
+This is a static website. Import the GitHub repository into Vercel and use:
+- Framework preset: Other
+- Build command: leave empty
+- Output directory: leave empty / project root
+- Install command: leave empty
 
-```bash
-firebase deploy
-```
+Vercel will serve `index.html` as the site entry point.
 
-The included `firebase.json` publishes the repository root as a static site. Firebase Hosting is the chosen hosting platform; Vercel is not required.
+## Project status
 
-## Security notes
-
-- Firebase web app config is public client configuration; never add service-account credentials to the browser app.
-- Room documents are readable by authenticated clients that know the room code so they can join. Room listing is disabled.
-- Only room members can update a room, with a 12-player limit. Review and test rules and add room expiry/abuse controls before a public launch.
+Local same-device gameplay only. Online multiplayer and backend services are intentionally out of scope for this version.
